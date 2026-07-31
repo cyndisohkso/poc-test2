@@ -1,11 +1,14 @@
 {
   "name": "sprint-retro",
   "version": "1.0.0",
-  "description": "Real-time sprint retrospective board for up to 15 participants",
+  "description": "Real-time sprint retrospective board with spotlight, reactions, and a shared countdown timer",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "express": "^4.21.0",

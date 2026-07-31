@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sprint Retro</title>
+  <title>Sprint Retrospective</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -16,20 +16,28 @@
     <div class="landing-content">
       <div class="logo">
         <span class="logo-icon">◈</span>
-        <h1>Sprint Retro</h1>
+        <h1>Sprint Retrospective</h1>
       </div>
-      <p class="tagline">Collaborate in real time with your team — up to 15 people</p>
+      <p class="tagline">Collaborate in real time with your whole team</p>
+
+      <div id="invite-banner" class="invite-banner hidden">
+        <span class="invite-icon">🔗</span>
+        <div>
+          <strong>You've been invited to a retro</strong>
+          <p>Room <span id="invite-code"></span> — enter your name below to join.</p>
+        </div>
+      </div>
 
       <div class="landing-cards">
-        <div class="landing-card">
+        <div class="landing-card" id="create-card">
           <h2>Start a retro</h2>
-          <p>Create a new room and share the code with your team.</p>
+          <p>Create a new room and get a link to share with your team.</p>
           <button id="btn-create" class="btn btn-primary">Create Room</button>
         </div>
 
-        <div class="landing-divider"><span>or</span></div>
+        <div class="landing-divider" id="landing-divider"><span>or</span></div>
 
-        <div class="landing-card">
+        <div class="landing-card" id="join-card">
           <h2>Join a retro</h2>
           <div class="form-group">
             <label for="join-code">Room code</label>
@@ -53,7 +61,7 @@
       <div class="header-left">
         <span class="logo-icon small">◈</span>
         <div>
-          <h1>Sprint Retro</h1>
+          <h1>Sprint Retrospective</h1>
           <div class="room-info">
             Room <strong id="room-code-display"></strong>
             <button id="btn-copy-code" class="btn-icon" title="Copy room code">📋</button>
@@ -66,13 +74,47 @@
           <span class="phase-dot"></span>
           Live session
         </div>
+        <div class="session-timer" title="Time since this room was created">
+          <span class="timer-icon">⏱</span>
+          <span id="session-timer">00:00</span>
+        </div>
+
+        <div class="countdown-wrap">
+          <button id="btn-timer" class="btn btn-share" title="Set a countdown timer">⏲ Timer</button>
+
+          <div id="countdown-badge" class="countdown-badge hidden">
+            <span id="countdown-value">00:00</span>
+            <button id="btn-stop-timer" class="btn-icon" title="Stop timer">✕</button>
+          </div>
+
+          <div id="timer-popover" class="timer-popover hidden">
+            <div class="popover-title">Start a countdown</div>
+            <div class="preset-row">
+              <button class="preset-btn" data-minutes="1">1 min</button>
+              <button class="preset-btn" data-minutes="3">3 min</button>
+              <button class="preset-btn" data-minutes="5">5 min</button>
+              <button class="preset-btn" data-minutes="10">10 min</button>
+              <button class="preset-btn" data-minutes="15">15 min</button>
+            </div>
+            <form id="custom-timer-form" class="custom-timer-row">
+              <label for="custom-minutes">Custom</label>
+              <input type="number" id="custom-minutes" min="1" max="240" step="1" placeholder="20">
+              <span class="unit">min</span>
+              <button type="submit" class="btn btn-primary">Start</button>
+            </form>
+          </div>
+        </div>
       </div>
 
       <div class="header-right">
         <div class="participants-badge">
-          <span id="participant-count">0</span>/15
+          <div class="avatar-stack" id="avatar-stack"></div>
+          <span class="participant-count-label">
+            <span id="participant-count">0</span> online
+          </span>
           <div class="participants-dropdown" id="participants-list"></div>
         </div>
+        <button id="btn-share" class="btn btn-share">🔗 Share link</button>
       </div>
     </header>
 
@@ -86,7 +128,10 @@
         <div class="column-cards" id="cards-went-well"></div>
         <form class="add-card-form" data-column="went-well">
           <textarea placeholder="Add a note..." rows="2" maxlength="500"></textarea>
-          <button type="submit" class="btn btn-add">Add</button>
+          <div class="form-row">
+            <span class="form-hint">Enter to add · Shift+Enter for a new line</span>
+            <button type="submit" class="btn btn-add">Add</button>
+          </div>
         </form>
       </section>
 
@@ -99,7 +144,10 @@
         <div class="column-cards" id="cards-improve"></div>
         <form class="add-card-form" data-column="improve">
           <textarea placeholder="Add a note..." rows="2" maxlength="500"></textarea>
-          <button type="submit" class="btn btn-add">Add</button>
+          <div class="form-row">
+            <span class="form-hint">Enter to add · Shift+Enter for a new line</span>
+            <button type="submit" class="btn btn-add">Add</button>
+          </div>
         </form>
       </section>
 
@@ -112,15 +160,72 @@
         <div class="column-cards" id="cards-action-items"></div>
         <form class="add-card-form" data-column="action-items">
           <textarea placeholder="Add an action item..." rows="2" maxlength="500"></textarea>
-          <button type="submit" class="btn btn-add">Add</button>
+          <div class="form-row">
+            <span class="form-hint">Enter to add · Shift+Enter for a new line</span>
+            <button type="submit" class="btn btn-add">Add</button>
+          </div>
         </form>
       </section>
     </main>
 
     <footer class="board-footer">
-      <p>Tip: Vote on items to prioritize discussion. Cards sync instantly for everyone in the room.</p>
+      <p>Tip: Press Enter to post a note, vote to prioritise discussion, and react with emojis. Everything syncs instantly.</p>
     </footer>
   </div>
+
+  <!-- Share Dialog -->
+  <div id="share-overlay" class="overlay hidden">
+    <div class="share-dialog">
+      <h2>Invite your team</h2>
+      <p>Anyone with this link joins the room straight away — no code to type.</p>
+
+      <div class="share-link-row">
+        <input type="text" id="share-link" readonly>
+        <button id="btn-copy-link" class="btn btn-primary">Copy</button>
+      </div>
+
+      <div class="share-code-row">
+        Or share the room code: <strong id="share-code"></strong>
+        <button id="btn-copy-share-code" class="btn-icon" title="Copy room code">📋</button>
+      </div>
+
+      <button id="btn-close-share" class="btn btn-secondary">Done</button>
+    </div>
+  </div>
+
+  <!-- Spotlight -->
+  <div id="spotlight-overlay" class="overlay hidden">
+    <div class="spotlight-panel">
+      <div class="spotlight-head">
+        <span id="spotlight-column" class="spotlight-column"></span>
+        <button id="btn-close-spotlight" class="btn-icon" title="Close spotlight (Esc)">✕</button>
+      </div>
+
+      <div id="spotlight-owner" class="spotlight-owner"></div>
+      <p id="spotlight-text" class="spotlight-text"></p>
+
+      <div class="spotlight-foot">
+        <div id="spotlight-meta" class="spotlight-meta"></div>
+        <div class="spotlight-nav">
+          <button id="btn-spotlight-prev" class="btn btn-secondary">← Previous</button>
+          <button id="btn-spotlight-next" class="btn btn-secondary">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time-up nudge -->
+  <div id="timeup-overlay" class="overlay hidden">
+    <div class="timeup-panel">
+      <div class="timeup-icon">⏰</div>
+      <h2>Time's up!</h2>
+      <p id="timeup-detail">The countdown has finished.</p>
+      <button id="btn-dismiss-timeup" class="btn btn-primary">Got it</button>
+    </div>
+  </div>
+
+  <!-- Reaction tooltip -->
+  <div id="reaction-tooltip" class="reaction-tooltip hidden"></div>
 
   <!-- Toast -->
   <div id="toast" class="toast hidden"></div>
