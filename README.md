@@ -53,6 +53,32 @@ you can copy it straight from the browser.
 For teammates on other machines, replace `localhost` with your machine's IP address
 (run `ipconfig` to find it) and make sure port 3000 is reachable through your firewall.
 
+## Deploying
+
+The app is a single stateful Node process, so it needs a host that supports
+WebSockets and can run one always-on instance.
+
+### Render
+
+A `render.yaml` blueprint is included:
+
+1. Sign in at [render.com](https://render.com) with your GitHub account
+2. **New** > **Blueprint**, pick this repository, and apply
+3. Render installs dependencies, runs `npm start`, and gives you a public URL
+
+Share that URL with your team - invite links work the same way, e.g.
+`https://your-app.onrender.com/r/K7M2QP`.
+
+### Important limits
+
+- **Rooms live in memory.** Restarting or redeploying the service destroys any
+  retro in progress. Deploy before a session, not during one.
+- **Free instances sleep** after ~15 minutes without traffic, and the next
+  visitor waits for a cold start. Open the app a minute before your retro.
+- **Do not scale past one instance.** Room state is per-process; a second
+  instance would put participants in different rooms. Sharing state across
+  instances requires the Socket.io Redis adapter.
+
 ## Tech Stack
 
 - **Node.js** + **Express** - static file serving and REST endpoints

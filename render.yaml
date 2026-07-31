@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: sprint-retrospective
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    # Rooms are held in memory, so a second instance would not share state.
+    numInstances: 1
+    envVars:
+      - key: NODE_VERSION
+        value: 22
