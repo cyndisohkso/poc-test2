@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint Retro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Landing Screen -->
+  <div id="landing" class="screen active">
+    <div class="landing-bg"></div>
+    <div class="landing-content">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <h1>Sprint Retro</h1>
+      </div>
+      <p class="tagline">Collaborate in real time with your team — up to 15 people</p>
+
+      <div class="landing-cards">
+        <div class="landing-card">
+          <h2>Start a retro</h2>
+          <p>Create a new room and share the code with your team.</p>
+          <button id="btn-create" class="btn btn-primary">Create Room</button>
+        </div>
+
+        <div class="landing-divider"><span>or</span></div>
+
+        <div class="landing-card">
+          <h2>Join a retro</h2>
+          <div class="form-group">
+            <label for="join-code">Room code</label>
+            <input type="text" id="join-code" placeholder="ABC123" maxlength="6" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="join-name">Your name</label>
+            <input type="text" id="join-name" placeholder="Alex" maxlength="30" autocomplete="name">
+          </div>
+          <button id="btn-join" class="btn btn-secondary">Join Room</button>
+        </div>
+      </div>
+
+      <p id="landing-error" class="error-msg hidden"></p>
+    </div>
+  </div>
+
+  <!-- Board Screen -->
+  <div id="board" class="screen">
+    <header class="board-header">
+      <div class="header-left">
+        <span class="logo-icon small">◈</span>
+        <div>
+          <h1>Sprint Retro</h1>
+          <div class="room-info">
+            Room <strong id="room-code-display"></strong>
+            <button id="btn-copy-code" class="btn-icon" title="Copy room code">📋</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="phase-indicator">
+          <span class="phase-dot"></span>
+          Live session
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="participants-badge">
+          <span id="participant-count">0</span>/15
+          <div class="participants-dropdown" id="participants-list"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="board-columns">
+      <section class="column" data-column="went-well">
+        <div class="column-header went-well">
+          <span class="column-icon">🎉</span>
+          <h2>What Went Well</h2>
+          <span class="card-count" id="count-went-well">0</span>
+        </div>
+        <div class="column-cards" id="cards-went-well"></div>
+        <form class="add-card-form" data-column="went-well">
+          <textarea placeholder="Add a note..." rows="2" maxlength="500"></textarea>
+          <button type="submit" class="btn btn-add">Add</button>
+        </form>
+      </section>
+
+      <section class="column" data-column="improve">
+        <div class="column-header improve">
+          <span class="column-icon">🔧</span>
+          <h2>What To Improve</h2>
+          <span class="card-count" id="count-improve">0</span>
+        </div>
+        <div class="column-cards" id="cards-improve"></div>
+        <form class="add-card-form" data-column="improve">
+          <textarea placeholder="Add a note..." rows="2" maxlength="500"></textarea>
+          <button type="submit" class="btn btn-add">Add</button>
+        </form>
+      </section>
+
+      <section class="column" data-column="action-items">
+        <div class="column-header action-items">
+          <span class="column-icon">✅</span>
+          <h2>Action Items</h2>
+          <span class="card-count" id="count-action-items">0</span>
+        </div>
+        <div class="column-cards" id="cards-action-items"></div>
+        <form class="add-card-form" data-column="action-items">
+          <textarea placeholder="Add an action item..." rows="2" maxlength="500"></textarea>
+          <button type="submit" class="btn btn-add">Add</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="board-footer">
+      <p>Tip: Vote on items to prioritize discussion. Cards sync instantly for everyone in the room.</p>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
